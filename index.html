@@ -204,9 +204,10 @@
         <div style="display:flex;flex-direction:column">
           <div ref="{{ mapRef }}" class="kk-mapbox" role="region" aria-label="Peta OpenStreetMap lokasi kunjungan KKDN Kalbar; gunakan tombol + dan − untuk zoom" style="flex:1 1 auto;min-height:440px;border:2px solid var(--color-divider);background:#eae7e7"></div>
           <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--color-neutral-800);margin-top:10px">
-            <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:14px;height:14px;background:#201e1d;display:inline-block"></span>Lokasi kunjungan (nomor = nomor sasaran, klik untuk detail)</span>
+            <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:14px;height:14px;background:#201e1d;display:inline-block"></span>Nomor sasaran (klik untuk detail)</span>
+            <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:#ec3013;border:1.5px solid #ffffff;box-shadow:0 0 0 1px #201e1d;display:inline-block"></span>Titik lokasi, bila nomornya disebar karena berdekatan</span>
           </div>
-          <p style="font-size:11px;line-height:1.45;color:var(--color-neutral-700);margin:6px 0 0">Peta dasar © kontributor OpenStreetMap. Titik yang berdekatan dijajarkan berdampingan agar nomornya terbaca; perbesar peta untuk posisi yang lebih rinci. Zoom dengan tombol + / − atau scroll setelah mengklik peta; di ponsel cubit dengan dua jari. Posisi titik indikatif.</p>
+          <p style="font-size:11px;line-height:1.45;color:var(--color-neutral-700);margin:6px 0 0">Peta dasar © kontributor OpenStreetMap. Nomor lokasi yang berdekatan disebar melingkar dan dihubungkan garis ke titik aslinya; perbesar peta untuk melihatnya terpisah. Zoom dengan tombol + / − atau scroll setelah mengklik peta; di ponsel cubit dengan dua jari. Posisi titik indikatif.</p>
         </div>
 
         <div>
@@ -727,18 +728,18 @@ const TEAMS = [
 ];
 
 const LOKASI = [
-  { no: 1, nama: "Kantor Gubernur Kalbar", lat: -0.0470, lon: 109.3430, waktu: "Sel, 24 Nov · 15.00–16.00 WIB", ket: "Jl. Ahmad Yani, Pontianak · posisi indikatif" },
-  { no: 2, nama: "Makodam XII/Tanjungpura", lat: -0.0930, lon: 109.3780, waktu: "Sel, 24 Nov · 16.20–17.30 WIB", ket: "Jl. Arteri Supadio, Kubu Raya · posisi indikatif" },
-  { no: 3, nama: "Lanud Supadio", lat: -0.1486, lon: 109.4042, waktu: "Sel, 24 Nov · 14.45–15.45 WIB", ket: "Sungai Raya, Kubu Raya" },
-  { no: 4, nama: "PT Borneo Alumina Indonesia (SGAR)", lat: 0.4750, lon: 108.9250, waktu: "Rab, 25 Nov · 09.30–10.30 WIB", ket: "Bukit Batu, Sungai Kunyit · posisi indikatif" },
-  { no: 5, nama: "PT Energi Unggul Persada", lat: 0.4400, lon: 108.9050, waktu: "Rab, 25 Nov · 10.40–13.00 WIB", ket: "Bersebelahan dengan Kijing · posisi indikatif" },
-  { no: 6, nama: "PT Pacific Bio Industry", lat: 0.4560, lon: 108.9120, waktu: "Rab, 25 Nov · 13.10–14.00 WIB", ket: "Kawasan pendukung Terminal Kijing · posisi indikatif" },
-  { no: 7, nama: "Pelabuhan Internasional Kijing", lat: 0.4520, lon: 108.8880, waktu: "Rab, 25 Nov · 14.10–15.30 WIB", ket: "Sungai Kunyit, Mempawah · posisi indikatif" },
-  { no: 8, nama: "Kawasan Industri Sungai Kunyit", lat: 0.4900, lon: 108.9400, waktu: "Rab, 25 Nov · 14.10–15.30 WIB", ket: "Kec. Sungai Kunyit · posisi indikatif" },
-  { no: 9, nama: "Mako Kodaeral XII", lat: 0.1100, lon: 109.1750, waktu: "Rab, 25 Nov · 08.30–10.00 WIB", ket: "Wajok Hilir, Mempawah · posisi indikatif" },
-  { no: 10, nama: "PT Antam, site bauksit Anjongan", lat: 0.3900, lon: 109.0900, waktu: "Rab, 25 Nov · 12.00–14.30 WIB", ket: "Anjongan, Mempawah · posisi indikatif" },
-  { no: 11, nama: "PLN UID Kalimantan Barat", lat: -0.0600, lon: 109.3620, waktu: "Jum, 27 Nov · 09.00–10.00 WIB", ket: "Pontianak · posisi indikatif" },
-  { no: 12, nama: "Istana Kadriah, Kesultanan Pontianak", lat: -0.0300, lon: 109.3480, waktu: "Jum, 27 Nov · 14.00–15.00 WIB", ket: "Kampung Beting, Pontianak Timur" }
+  { no: 1, nama: "Kantor Gubernur Kalbar", lat: -0.0600, lon: 109.3535, waktu: "Sel, 24 Nov · 15.00–16.00 WIB", ket: "Jl. Ahmad Yani, Pontianak Tenggara · posisi indikatif" },
+  { no: 2, nama: "Makodam XII/Tanjungpura", lat: -0.0960, lon: 109.3850, waktu: "Sel, 24 Nov · 16.20–17.30 WIB", ket: "Sungai Raya, Kubu Raya · posisi indikatif" },
+  { no: 3, nama: "Lanud Supadio", lat: -0.1506, lon: 109.4039, waktu: "Sel, 24 Nov · 14.45–15.45 WIB", ket: "Sungai Raya, Kubu Raya" },
+  { no: 4, nama: "PT Borneo Alumina Indonesia (SGAR)", lat: 0.4800, lon: 108.9300, waktu: "Rab, 25 Nov · 09.30–10.30 WIB", ket: "Desa Bukit Batu, Sungai Kunyit · posisi indikatif" },
+  { no: 5, nama: "PT Energi Unggul Persada", lat: 0.5020, lon: 108.9160, waktu: "Rab, 25 Nov · 10.40–13.00 WIB", ket: "Bersebelahan dengan Terminal Kijing · posisi indikatif" },
+  { no: 6, nama: "PT Pacific Bio Industry", lat: 0.4930, lon: 108.9160, waktu: "Rab, 25 Nov · 13.10–14.00 WIB", ket: "Kawasan pendukung Terminal Kijing · posisi indikatif" },
+  { no: 7, nama: "Pelabuhan Internasional Kijing", lat: 0.4974, lon: 108.9059, waktu: "Rab, 25 Nov · 14.10–15.30 WIB", ket: "Sungai Kunyit, Mempawah" },
+  { no: 8, nama: "Kawasan Industri Sungai Kunyit", lat: 0.4870, lon: 108.9200, waktu: "Rab, 25 Nov · 14.10–15.30 WIB", ket: "Kec. Sungai Kunyit · posisi indikatif" },
+  { no: 9, nama: "Mako Kodaeral XII", lat: 0.0650, lon: 109.2350, waktu: "Rab, 25 Nov · 08.30–10.00 WIB", ket: "Wajok Hilir, Kec. Jongkat, Mempawah · posisi indikatif" },
+  { no: 10, nama: "PT Antam, site bauksit Anjongan", lat: 0.2900, lon: 109.1700, waktu: "Rab, 25 Nov · 12.00–14.30 WIB", ket: "Kec. Anjongan, Mempawah · posisi indikatif" },
+  { no: 11, nama: "PLN UID Kalimantan Barat", lat: -0.0880, lon: 109.3700, waktu: "Jum, 27 Nov · 09.00–10.00 WIB", ket: "Jl. Adisucipto Km 7, Sungai Raya · posisi indikatif" },
+  { no: 12, nama: "Istana Kadriah, Kesultanan Pontianak", lat: -0.0265, lon: 109.3500, waktu: "Jum, 27 Nov · 14.00–15.00 WIB", ket: "Kampung Beting, Pontianak Timur" }
 ];
 
 const DAY_MS = 86400000;
@@ -786,16 +787,15 @@ class Component extends DCLogic {
       maxZoom: 19,
       attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
     }).addTo(map);
-    const pts = [];
-    this._pins = [];
-    LOKASI.forEach((l) => {
+    this._spider = L.layerGroup().addTo(map);
+    this._pins = LOKASI.map((l) => {
+      const latlng = L.latLng(l.lat, l.lon);
       const icon = L.divIcon({ className: "kk-pin", html: String(l.no), iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
-      const m = L.marker([l.lat, l.lon], { icon, title: l.nama, keyboard: true }).addTo(map);
-      m.bindPopup("<strong>" + l.no + ". " + l.nama + "</strong><br>" + l.waktu + "<br><span style=\"color:#605d5d\">" + l.ket + "</span>");
-      this._pins.push({ no: l.no, marker: m, latlng: L.latLng(l.lat, l.lon) });
-      pts.push([l.lat, l.lon]);
+      const marker = L.marker(latlng, { icon, title: l.nama, keyboard: true }).addTo(map);
+      marker.bindPopup("<strong>" + l.no + ". " + l.nama + "</strong><br>" + l.waktu + "<br><span style=\"color:#605d5d\">" + l.ket + "</span>");
+      return { no: l.no, latlng, marker };
     });
-    map.fitBounds(pts, { padding: [40, 40] });
+    map.fitBounds(this._pins.map((o) => o.latlng), { padding: [44, 44] });
     map.on("click focus", () => map.scrollWheelZoom.enable());
     map.on("mouseout blur", () => map.scrollWheelZoom.disable());
     map.on("zoomend", () => this.layoutPins());
@@ -805,10 +805,12 @@ class Component extends DCLogic {
   }
 
   layoutPins() {
-    // Pins closer than one badge are lined up side by side around their shared centre so no number covers another.
+    // Each place keeps a small red dot at its own position. Numbers that would cover each other
+    // are spread on a ring around their shared centre, with a thin line back to their own dot.
     const map = this._map, L = window.L;
     if (!map || !L || !this._pins) return;
-    const GAP = 28;
+    const GAP = 30;
+    this._spider.clearLayers();
     const items = this._pins.map((o) => ({ o, p: map.latLngToLayerPoint(o.latlng) }));
     const seen = new Set();
     const groups = [];
@@ -817,23 +819,26 @@ class Component extends DCLogic {
       const g = [i]; seen.add(i);
       for (let k = 0; k < g.length; k++) {
         items.forEach((other, j) => {
-          if (seen.has(j)) return;
-          const a = items[g[k]].p;
-          if (Math.abs(a.x - other.p.x) < GAP && Math.abs(a.y - other.p.y) < GAP) { g.push(j); seen.add(j); }
+          if (!seen.has(j) && items[g[k]].p.distanceTo(other.p) < GAP) { g.push(j); seen.add(j); }
         });
       }
       groups.push(g.map((idx) => items[idx]));
     });
     groups.forEach((g) => {
-      g.sort((a, b) => a.o.no - b.o.no);
-      const cx = g.reduce((s, it) => s + it.p.x, 0) / g.length;
-      const cy = g.reduce((s, it) => s + it.p.y, 0) / g.length;
+      if (g.length === 1) { g[0].o.marker.setLatLng(g[0].o.latlng); return; }
+      const c = g.reduce((acc, it) => acc.add(it.p), L.point(0, 0)).divideBy(g.length);
+      const r = Math.max(38, (g.length * (GAP + 4)) / (2 * Math.PI));
+      const angleOf = (it) => Math.atan2(it.p.y - c.y, it.p.x - c.x);
+      g.sort((a, b) => angleOf(a) - angleOf(b));
+      const start = angleOf(g[0]);
       g.forEach((it, i) => {
-        const dx = g.length > 1 ? (i - (g.length - 1) / 2) * GAP : 0;
-        const tx = g.length > 1 ? cx + dx : it.p.x;
-        const ty = g.length > 1 ? cy : it.p.y;
-        const ax = it.p.x - tx + 12, ay = it.p.y - ty + 12;
-        it.o.marker.setIcon(L.divIcon({ className: "kk-pin", html: String(it.o.no), iconSize: [24, 24], iconAnchor: [ax, ay], popupAnchor: [12 - ax, -ay] }));
+        const ang = start + (i * 2 * Math.PI) / g.length;
+        const spot = map.layerPointToLatLng(L.point(c.x + r * Math.cos(ang), c.y + r * Math.sin(ang)));
+        it.o.marker.setLatLng(spot);
+        L.polyline([it.o.latlng, spot], { color: "#201e1d", weight: 1.5, opacity: 0.7, interactive: false }).addTo(this._spider);
+      });
+      g.forEach((it) => {
+        L.circleMarker(it.o.latlng, { radius: 4, color: "#ffffff", weight: 1.5, fillColor: "#ec3013", fillOpacity: 1, interactive: false }).addTo(this._spider);
       });
     });
   }
