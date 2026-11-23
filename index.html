@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KKDN Kalbar 2026 — Portal Kunjungan</title>
+<meta name="description" content="Portal Kunjungan Kerja Dalam Negeri Kedeputian Bidang Geoekonomi DPN ke Kalimantan Barat, 24–28 November 2026.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/leaflet/leaflet.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body{margin:0}
+    :root{
+      --color-bg:#f3f2f2;--color-surface:#eae9e9;--color-text:#201e1d;
+      --color-accent:#ec3013;--color-divider:color-mix(in srgb,#201e1d 40%,transparent);
+      --color-neutral-100:#f8f4f4;--color-neutral-200:#eae7e7;--color-neutral-300:#d7d3d3;
+      --color-neutral-700:#605d5d;--color-neutral-800:#444141;
+      --color-accent-100:#fff2ef;--color-accent-200:#ffe0d9;--color-accent-300:#ffc4b8;
+      --color-accent-400:#ff9783;--color-accent-600:#dd2b0f;--color-accent-700:#ae1800;
+      --color-orange:#f5860b;
+      --font-heading:"Archivo",system-ui,sans-serif;--font-body:"Archivo",system-ui,sans-serif;
+    }
+    a{color:#ae1800}
+    a:hover{color:#ec3013}
+    button{font:inherit;color:inherit}
+    :focus-visible{outline:2px solid #ec3013;outline-offset:2px}
+    .kk-pin{background:#201e1d;color:#f3f2f2;border:2px solid #f3f2f2;font:800 11px/20px Archivo,system-ui,sans-serif;text-align:center;box-sizing:border-box;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+    .leaflet-container{font-family:Archivo,system-ui,sans-serif}
+    .leaflet-popup-content-wrapper,.leaflet-popup-tip{border-radius:0}
+    .kk-trace{stroke-dasharray:1000;stroke-dashoffset:0}
+    @keyframes kkDraw{0%{stroke-dashoffset:1000}70%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+    @keyframes kkRing{0%{transform:scale(.6);opacity:.95}100%{transform:scale(3.3);opacity:0}}
+    @keyframes kkFlick{0%,100%{transform:scale(1,1)}25%{transform:scale(.94,1.08)}50%{transform:scale(1.05,.96)}75%{transform:scale(.97,1.05)}}
+    @keyframes kkNow{0%{box-shadow:0 0 0 0 rgba(236,48,19,.55)}100%{box-shadow:0 0 0 12px rgba(236,48,19,0)}}
+    .kk-ring{transform-box:fill-box;transform-origin:center;opacity:0}
+    .kk-flame{transform-box:fill-box;transform-origin:50% 100%}
+    @media (prefers-reduced-motion:no-preference){
+      .kk-trace{animation:kkDraw 6s cubic-bezier(.4,0,.2,1) infinite}
+      .kk-ring{animation:kkRing 2.4s ease-out infinite}
+      .kk-r2{animation-delay:.8s}
+      .kk-r3{animation-delay:1.6s}
+      .kk-flame{animation:kkFlick 1.4s ease-in-out infinite}
+      .kk-now{animation:kkNow 1.6s ease-out infinite}
+    }
+    .kk-tl-lbl{position:absolute;font-size:10px;line-height:1.2;letter-spacing:.04em;font-weight:700;white-space:nowrap;color:#605d5d}
+    .kk-tl-num{position:absolute;transform:translateX(-50%);width:16px;height:16px;display:flex;align-items:center;justify-content:center;background:#201e1d;color:#f3f2f2;font:800 10px/1 Archivo,system-ui,sans-serif}
+    .kk-tl-key{flex:0 0 16px;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;background:#201e1d;color:#f3f2f2;font:800 10px/1 Archivo,system-ui,sans-serif}
+    .kk-g2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px}
+    .kk-kpi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .kk-kab{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .kk-main{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px}
+    .kk-ns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .kk-sas{columns:2;column-gap:32px}
+    .kk-sas > *{break-inside:avoid}
+    .kk-nav a{display:inline-flex;align-items:center;min-height:44px;white-space:nowrap}
+    .kk-chip{display:inline-flex;align-items:center;min-height:32px;padding:0 10px;border:2px solid var(--color-divider);text-decoration:none;font-weight:700}
+    html{-webkit-text-size-adjust:100%}
+    img,svg{max-width:100%}
+    @media (max-width:900px){
+      .kk-g2,.kk-main{grid-template-columns:minmax(0,1fr)}
+      .kk-kab{grid-template-columns:minmax(0,1fr)}
+      .kk-side{border-left:none !important;padding-left:0 !important;border-top:2px solid var(--color-divider);padding-top:20px}
+      .kk-sas{columns:1}
+      .kk-h1{font-size:26px !important}
+      .kk-sas a{display:inline-flex;align-items:center;min-height:44px}
+      .kk-sas{line-height:1.35 !important}
+      .kk-chip{min-height:44px}
+    }
+    @media (max-width:600px){
+      .kk-wrap{padding:20px 16px 0 !important}
+      header{padding:8px 16px !important}
+      .kk-mapbox{min-height:320px !important}
+      .kk-h1{font-size:24px !important}
+      .kk-kpi > div{padding:10px !important}
+      .kk-ns{grid-template-columns:minmax(0,1fr)}
+      .kk-stats{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr))}
+      .kk-pulse{flex-wrap:wrap}
+      .kk-pulse > .kk-tl{flex-basis:100% !important}
+      .kk-nav{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:0 12px !important}
+      .kk-hdr-meta{white-space:normal !important;margin-left:0 !important;padding-bottom:6px}
+      .kk-kpi-v{font-size:19px !important}
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<noscript><p style="font-family:system-ui,sans-serif;padding:24px">Portal ini membutuhkan JavaScript. Aktifkan JavaScript di browser Anda untuk melihat isinya.</p></noscript>
+<template id="tpl">
+<div style="background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);min-height:100vh;padding-bottom:48px">
+
+  <header style="display:flex;align-items:center;flex-wrap:wrap;gap:6px 20px;min-height:56px;padding:8px 24px;box-sizing:border-box;border-bottom:2px solid var(--color-divider)">
+    <div style="font-family:var(--font-heading);font-weight:800;font-size:14px;letter-spacing:.02em;white-space:nowrap">KKDN KALBAR 2026</div>
+    <nav class="kk-nav" aria-label="Bagian halaman" style="display:flex;gap:0 16px;flex-wrap:wrap;font-size:12px;font-weight:700">
+      <a href="#konteks">Konteks Kalbar</a>
+      <a href="#pointer">Pointer diskusi</a>
+      <a href="forum-diskusi-karhutla.html">Forum karhutla</a>
+      <a href="#rundown">Rencana kegiatan</a>
+    </nav>
+    <div class="kk-hdr-meta" style="margin-left:auto;font-size:12px;color:var(--color-neutral-700);letter-spacing:.02em;white-space:nowrap">24–28 NOV / PONTIANAK · KUBU RAYA · MEMPAWAH</div>
+  </header>
+
+  <div class="kk-wrap" style="max-width:1200px;margin:0 auto;padding:28px 24px 0;box-sizing:border-box">
+
+    <section aria-labelledby="judul" style="margin-bottom:24px">
+      <div style="display:inline-flex;align-items:baseline;gap:10px;flex-wrap:wrap;background:var(--color-text);color:var(--color-bg);padding:8px 14px;margin-bottom:14px">
+        <span style="font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:.02em">{{ dayBannerTitle }}</span>
+        <span style="font-size:12px;letter-spacing:.04em;opacity:.85">{{ dayBannerSub }}</span>
+      </div>
+      <div style="font-size:11px;letter-spacing:.08em;color:var(--color-accent-700);font-weight:700;margin-bottom:6px">KUNJUNGAN KERJA DALAM NEGERI · KEDEPUTIAN BIDANG GEOEKONOMI DPN · PROVINSI KALIMANTAN BARAT</div>
+      <h1 id="judul" class="kk-h1" style="font-family:var(--font-heading);font-size:34px;line-height:1.12;margin:0 0 10px;font-weight:800;max-width:940px">Kalimantan Barat: Karhutla, Hilirisasi &amp; Ketahanan Listrik di Wilayah Perbatasan</h1>
+      <p style="margin:0;font-size:15px;line-height:1.5;color:var(--color-neutral-800);max-width:860px">Pontianak, Kubu Raya dan Mempawah, 24–28 November 2026, dengan tema “Strategi Penguatan Integrasi OMSP TNI dan Kolaborasi Lintas Sektor dalam Mitigasi, Penanggulangan dan Pemulihan Karhutla”. Kunjungan dimulai sembilan hari setelah status siaga darurat bencana asap Kalbar berakhir pada 15 November.</p>
+
+      <div class="kk-pulse" role="img" aria-label="Lini masa Kalimantan Barat 2026: siaga darurat bencana asap 2 Februari sampai 15 November, pemadaman bergilir 2 sampai 12 Juli, rapat Presiden di Lanud Supadio 22 Agustus, pemeliharaan PLTU Bengkayang mulai Oktober, kunjungan KKDN 24 sampai 28 November" style="display:flex;align-items:center;gap:20px;margin-top:18px;padding:12px 0;border-top:2px solid var(--color-divider);border-bottom:2px solid var(--color-divider)">
+        <div style="flex:0 0 auto;display:flex;align-items:center;gap:10px">
+          <svg viewBox="-50 -50 100 100" width="76" height="76" aria-hidden="true" style="display:block;overflow:visible">
+            <circle class="kk-ring" r="14" fill="none" stroke="#ec3013" stroke-width="2.5"></circle>
+            <circle class="kk-ring kk-r2" r="14" fill="none" stroke="#ec3013" stroke-width="2.5"></circle>
+            <circle class="kk-ring kk-r3" r="14" fill="none" stroke="#ec3013" stroke-width="2.5"></circle>
+            <g class="kk-flame">
+              <path d="M0,-17 C7,-9 12,-2 10,6 C8,13 -8,13 -10,6 C-12,-1 -5,-6 0,-17 Z" fill="#ec3013" stroke="#201e1d" stroke-width="1.5"></path>
+              <path d="M0,-4 C4,0 6,4 5,7 C4,10 -4,10 -5,7 C-6,4 -3,1 0,-4 Z" fill="#f5860b"></path>
+            </g>
+          </svg>
+          <div style="line-height:1.25">
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:20px;color:#ae1800">48.536 ha</div>
+            <div style="font-size:10.5px;letter-spacing:.04em;color:var(--color-neutral-700)">LUAS KARHUTLA KALBAR 2026<br>BNPB · PER SEPTEMBER</div>
+          </div>
+        </div>
+        <div class="kk-tl" style="flex:1 1 auto;min-width:0">
+          <div style="position:relative;height:60px">
+          <span class="kk-tl-num" aria-hidden="true" style="left:8.8%;top:0;background:#ae1800;color:#ffffff">1</span>
+          <span class="kk-tl-num" aria-hidden="true" style="left:51.2%;top:0">2</span>
+          <span class="kk-tl-num" aria-hidden="true" style="left:63.8%;top:0">3</span>
+          <span class="kk-tl-num" aria-hidden="true" style="left:74.8%;top:0">4</span>
+          <span class="kk-tl-num" aria-hidden="true" style="left:90.1%;top:0;background:#f5860b;color:#201e1d">5</span>
+          <svg viewBox="0 0 1000 24" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;left:0;top:20px;width:100%;height:24px;display:block">
+            <line x1="0" y1="12" x2="1000" y2="12" stroke="#d7d3d3" stroke-width="2" vector-effect="non-scaling-stroke"></line>
+            <line x1="0" y1="7" x2="0" y2="17" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="85" y1="8" x2="85" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="162" y1="8" x2="162" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="247" y1="8" x2="247" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="329" y1="8" x2="329" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="414" y1="8" x2="414" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="496" y1="8" x2="496" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="581" y1="8" x2="581" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="666" y1="8" x2="666" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="748" y1="8" x2="748" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="833" y1="8" x2="833" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="915" y1="8" x2="915" y2="16" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <line x1="1000" y1="7" x2="1000" y2="17" stroke="#d7d3d3" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+            <path d="M88,12 L871,12" fill="none" stroke="#ffc4b8" stroke-width="8" vector-effect="non-scaling-stroke"></path>
+            <path class="kk-trace" pathLength="1000" d="M88,12 L871,12" fill="none" stroke="#ec3013" stroke-width="8" vector-effect="non-scaling-stroke"></path>
+          </svg>
+          <span aria-hidden="true" style="position:absolute;left:49.9%;width:2.7%;min-width:4px;top:27px;height:10px;background:#201e1d"></span>
+          <span aria-hidden="true" style="position:absolute;left:63.8%;top:27px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:#201e1d;border:2px solid #f3f2f2;box-sizing:border-box"></span>
+          <span aria-hidden="true" style="position:absolute;left:74.8%;top:27px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:#201e1d;border:2px solid #f3f2f2;box-sizing:border-box"></span>
+          <span class="kk-now" aria-hidden="true" style="position:absolute;left:89.6%;top:24px;width:1.1%;min-width:10px;height:16px;background:#f5860b;border:2px solid #201e1d;box-sizing:border-box"></span>
+          <sc-for list="{{ monthLabels }}" as="m" hint-placeholder-count="12">
+            <span class="kk-tl-lbl" aria-hidden="true" style="{{ m.style }}">{{ m.label }}</span>
+          </sc-for>
+          </div>
+          <ol aria-hidden="true" style="list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:10.5px;line-height:1.3;letter-spacing:.03em;font-weight:700;color:#605d5d">
+            <li style="display:inline-flex;align-items:center;gap:6px"><span class="kk-tl-key" style="background:#ae1800;color:#ffffff">1</span><span style="color:#ae1800">2 FEB–15 NOV · SIAGA DARURAT ASAP</span></li>
+            <li style="display:inline-flex;align-items:center;gap:6px"><span class="kk-tl-key">2</span><span>2–12 JUL · PEMADAMAN BERGILIR</span></li>
+            <li style="display:inline-flex;align-items:center;gap:6px"><span class="kk-tl-key">3</span><span>22 AGU · RAPAT PRESIDEN DI SUPADIO</span></li>
+            <li style="display:inline-flex;align-items:center;gap:6px"><span class="kk-tl-key">4</span><span>OKT · PLTU BENGKAYANG DIPELIHARA</span></li>
+            <li style="display:inline-flex;align-items:center;gap:6px"><span class="kk-tl-key" style="background:#f5860b;color:#201e1d">5</span><span style="color:#201e1d;font-weight:800">24–28 NOV · KKDN</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="kk-stats" style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+        <div style="border:2px solid var(--color-text);padding:8px 14px;min-width:96px">
+          <div style="font-size:20px;font-weight:800;font-family:var(--font-heading)">12</div>
+          <div style="font-size:10px;color:var(--color-neutral-700);letter-spacing:.04em">SASARAN KUNJUNGAN</div>
+        </div>
+        <div style="border:2px solid var(--color-text);padding:8px 14px;min-width:96px">
+          <div style="font-size:20px;font-weight:800;font-family:var(--font-heading)">5</div>
+          <div style="font-size:10px;color:var(--color-neutral-700);letter-spacing:.04em">HARI KEGIATAN</div>
+        </div>
+        <div style="border:2px solid var(--color-text);padding:8px 14px;min-width:96px">
+          <div style="font-size:20px;font-weight:800;font-family:var(--font-heading)">3</div>
+          <div style="font-size:10px;color:var(--color-neutral-700);letter-spacing:.04em">MATRA TNI DIKUNJUNGI</div>
+        </div>
+        <div style="border:2px solid var(--color-text);padding:8px 14px;min-width:96px">
+          <div style="font-size:20px;font-weight:800;font-family:var(--font-heading)">1</div>
+          <div style="font-size:10px;color:var(--color-neutral-700);letter-spacing:.04em">FORUM DISKUSI KARHUTLA</div>
+        </div>
+        <div style="border:2px solid var(--color-accent);background:var(--color-accent-100);padding:8px 14px;min-width:96px">
+          <div style="font-size:20px;font-weight:800;font-family:var(--font-heading);color:var(--color-accent-700)">{{ countdownValue }}</div>
+          <div style="font-size:10px;color:var(--color-accent-700);letter-spacing:.04em">{{ countdownLabel }}</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="height:2px;background:var(--color-divider);margin-bottom:24px"></div>
+
+    <section id="konteks" aria-labelledby="konteks-h" style="margin-bottom:28px">
+      <div style="font-size:11px;letter-spacing:.08em;color:var(--color-accent-700);font-weight:700;margin-bottom:4px">KONTEKS KUNJUNGAN · DATA S.D. 20 NOVEMBER 2026</div>
+      <h2 id="konteks-h" style="font-family:var(--font-heading);font-size:22px;margin:0 0 8px;font-weight:800">Kalbar 2026: Asap, Listrik dan Hilirisasi</h2>
+      <p style="margin:0 0 18px;font-size:14px;line-height:1.55;color:var(--color-neutral-800);max-width:860px">Kalbar berbatasan darat dengan Sarawak dan menjadi provinsi dengan karhutla terluas di Indonesia pada 2026. Sistem listriknya dua kali padam bergilir, sementara Mempawah menjadi lokasi hilirisasi bauksit–alumina–aluminium terbesar milik BUMN. Tiga topik audiensi Gubernur di rundown (karhutla, hilirisasi, listrik) adalah tiga isu terbesar provinsi saat ini.</p>
+
+      <div class="kk-g2" style="align-items:stretch">
+        <div style="display:flex;flex-direction:column">
+          <div ref="{{ mapRef }}" class="kk-mapbox" role="region" aria-label="Peta OpenStreetMap lokasi kunjungan KKDN Kalbar; gunakan tombol + dan − untuk zoom" style="flex:1 1 auto;min-height:440px;border:2px solid var(--color-divider);background:#eae7e7"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--color-neutral-800);margin-top:10px">
+            <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:14px;height:14px;background:#201e1d;display:inline-block"></span>Lokasi kunjungan (nomor = nomor sasaran, klik untuk detail)</span>
+          </div>
+          <p style="font-size:11px;line-height:1.45;color:var(--color-neutral-700);margin:6px 0 0">Peta dasar © kontributor OpenStreetMap. Titik yang berdekatan dijajarkan berdampingan agar nomornya terbaca; perbesar peta untuk posisi yang lebih rinci. Zoom dengan tombol + / − atau scroll setelah mengklik peta; di ponsel cubit dengan dua jari. Posisi titik indikatif.</p>
+        </div>
+
+        <div>
+          <div class="kk-kpi">
+            <div style="border:2px solid var(--color-divider);padding:12px">
+              <div class="kk-kpi-v" style="font-size:22px;font-weight:800;font-family:var(--font-heading);color:var(--color-accent-700);overflow-wrap:break-word">48.536 ha</div>
+              <div style="font-size:11px;color:var(--color-neutral-700);margin-top:4px;line-height:1.35">Luas karhutla per September (BNPB), terluas nasional; total 2025: 26.703 ha</div>
+            </div>
+            <div style="border:2px solid var(--color-divider);padding:12px">
+              <div class="kk-kpi-v" style="font-size:22px;font-weight:800;font-family:var(--font-heading);color:var(--color-accent-700);overflow-wrap:break-word">287 hari</div>
+              <div style="font-size:11px;color:var(--color-neutral-700);margin-top:4px;line-height:1.35">Siaga darurat bencana asap, 2 Feb–15 Nov; delapan kabupaten ikut menetapkan</div>
+            </div>
+            <div style="border:2px solid var(--color-divider);padding:12px">
+              <div class="kk-kpi-v" style="font-size:22px;font-weight:800;font-family:var(--font-heading);color:var(--color-accent-700);overflow-wrap:break-word">5,24%</div>
+              <div style="font-size:11px;color:var(--color-neutral-700);margin-top:4px;line-height:1.35">Pertumbuhan TW III-2026, turun dari 6,14% di TW I (nasional 5,47%)</div>
+            </div>
+            <div style="border:2px solid var(--color-divider);padding:12px">
+              <div class="kk-kpi-v" style="font-size:22px;font-weight:800;font-family:var(--font-heading);color:var(--color-accent-700);overflow-wrap:break-word">±650 MW</div>
+              <div style="font-size:11px;color:var(--color-neutral-700);margin-top:4px;line-height:1.35">Beban puncak sistem Khatulistiwa; padam bergilir Juli dan Oktober 2026</div>
+            </div>
+            <div style="border:2px solid var(--color-divider);padding:12px">
+              <div class="kk-kpi-v" style="font-size:22px;font-weight:800;font-family:var(--font-heading);color:var(--color-accent-700);overflow-wrap:break-word">546.667 ton</div>
+              <div style="font-size:11px;color:var(--color-neutral-700);margin-top:4px;line-height:1.35">Total alumina dikirim SGAR Jan–Sep 2026, dari kapasitas 1 juta ton per tahun</div>
+            </div>
+            <div style="border:2px solid var(--color-divider);padding:12px">
+              <div class="kk-kpi-v" style="font-size:22px;font-weight:800;font-family:var(--font-heading);color:var(--color-accent-700);overflow-wrap:break-word">Rp87,7–<wbr>104,5&nbsp;T</div>
+              <div style="font-size:11px;color:var(--color-neutral-700);margin-top:4px;line-height:1.35">Nilai investasi proyek SGAR Fase II, smelter aluminium dan pembangkit di Mempawah</div>
+            </div>
+          </div>
+
+          <div style="border:2px solid var(--color-accent);background:var(--color-accent-100);padding:14px;margin-top:14px">
+            <div style="font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--color-accent-700);margin-bottom:6px">POSISI SAAT KUNJUNGAN</div>
+            <p style="margin:0;font-size:13px;line-height:1.5">Karhutla masih terjadi hingga akhir 2026. Pemeliharaan PLTU Bengkayang (±54 hari sejak Oktober) kemungkinan belum rampung saat audiensi PLN. Pemerintah juga sedang menilai ulang mandat B50 (13 November), yang langsung menyangkut dua sasaran sawit di Mempawah.</p>
+          </div>
+
+          <a href="profil-01-pemprov-kalbar.html" style="display:inline-flex;align-items:center;min-height:44px;font-size:12.5px;font-weight:700;text-decoration:underline;margin-top:6px">Buka profil Pemprov Kalbar →</a>
+        </div>
+      </div>
+
+      <h3 style="font-family:var(--font-heading);font-size:14px;margin:28px 0 4px;font-weight:800;letter-spacing:.02em">BENANG MERAH LINTAS SASARAN</h3>
+      <p style="font-size:12px;color:var(--color-neutral-700);margin:0 0 12px">Enam isu yang muncul di lebih dari satu audiensi. Klik untuk melihat fakta kunci dan sasaran terkait.</p>
+      <div class="kk-kab">
+        <sc-for list="{{ isu }}" as="i" hint-placeholder-count="6">
+          <div style="{{ i.boxStyle }}">
+            <button type="button" onClick="{{ i.toggle }}" aria-expanded="{{ i.open }}" style="display:flex;width:100%;align-items:center;gap:10px;background:transparent;border:0;padding:14px 16px;cursor:pointer;text-align:left;min-height:44px">
+              <span style="flex:1;font-family:var(--font-heading);font-weight:800;font-size:15.5px;line-height:1.25">{{ i.judul }}</span>
+              <span style="{{ i.tagStyle }}">{{ i.tag }}</span>
+              <span aria-hidden="true" style="font-size:18px;font-weight:800;color:var(--color-accent-700);width:16px;text-align:center">{{ i.icon }}</span>
+            </button>
+            <sc-if value="{{ i.open }}" hint-placeholder-val="{{ false }}">
+              <ul style="margin:0 0 10px;padding:0 16px 0 32px;font-size:12.5px;line-height:1.5;display:flex;flex-direction:column;gap:6px">
+                <sc-for list="{{ i.poin }}" as="b" hint-placeholder-count="3">
+                  <li>{{ b }}</li>
+                </sc-for>
+              </ul>
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:0 16px 14px;font-size:11.5px">
+                <span style="font-weight:800;letter-spacing:.04em;color:var(--color-neutral-700)">SASARAN</span>
+                <sc-for list="{{ i.rel }}" as="r" hint-placeholder-count="4">
+                  <a href="{{ r.file }}" class="kk-chip">{{ r.label }}</a>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="height:2px;background:var(--color-divider);margin-bottom:24px"></div>
+
+    <div class="kk-main">
+      <div>
+        <section id="pointer" aria-labelledby="pointer-h">
+          <h2 id="pointer-h" style="font-family:var(--font-heading);font-size:18px;margin:0 0 4px;font-weight:800">Pointer Diskusi per Sasaran</h2>
+          <p style="font-size:12px;color:var(--color-neutral-700);margin:0 0 14px;line-height:1.45">Fakta kunci dari profil instansi dan pertanyaan untuk tiap audiensi. Label [Est.] adalah estimasi penyusun. Pilih tema untuk menyaring.</p>
+
+          <div role="group" aria-label="Tema sasaran" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+            <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+              <button type="button" onClick="{{ t.pick }}" aria-pressed="{{ t.pressed }}" style="{{ t.style }}">
+                <span style="display:block;font-size:10px;letter-spacing:.06em;opacity:.8">{{ t.count }}</span>
+                {{ t.label }}
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ activeSasaran }}" as="s" hint-placeholder-count="3">
+              <article style="border:2px solid var(--color-text)">
+                <button type="button" onClick="{{ s.toggle }}" aria-expanded="{{ s.open }}" style="display:flex;width:100%;gap:12px;align-items:flex-start;background:transparent;border:0;padding:16px;cursor:pointer;text-align:left;min-height:44px">
+                  <div style="flex:0 0 32px;height:32px;background:var(--color-text);color:var(--color-bg);font-family:var(--font-heading);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center">{{ s.noLabel }}</div>
+                  <div style="flex:1;min-width:0">
+                    <h3 style="font-family:var(--font-heading);font-size:15.5px;margin:0;font-weight:800;line-height:1.25">{{ s.nama }}</h3>
+                    <div style="font-size:11.5px;color:var(--color-neutral-700);margin-top:3px;line-height:1.4">{{ s.meta }}</div>
+                    <div style="margin-top:6px"><span style="{{ s.tagStyle }}">{{ s.timLabel }}</span></div>
+                  </div>
+                  <span aria-hidden="true" style="flex:0 0 16px;font-size:18px;font-weight:800;line-height:1.2;color:var(--color-accent-700);text-align:center">{{ s.icon }}</span>
+                </button>
+                <a href="{{ s.profil }}" style="display:inline-flex;align-items:center;min-height:44px;margin:-12px 16px 6px 60px;font-size:12px;font-weight:800;letter-spacing:.02em">Buka profil lengkap →</a>
+                <sc-if value="{{ s.open }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:0 16px 16px">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ s.pointers }}" as="p" hint-placeholder-count="3">
+                    <div style="font-size:13px;line-height:1.5;padding-left:12px;border-left:2px solid var(--color-accent)"><span style="font-weight:700">{{ p.lead }}</span> {{ p.rest }}</div>
+                  </sc-for>
+                </div>
+                <div style="margin-top:12px;background:var(--color-neutral-200);padding:10px 12px;font-size:12.5px;line-height:1.5">
+                  <span style="font-weight:800;font-size:10.5px;letter-spacing:.06em;color:var(--color-accent-700);display:block;margin-bottom:2px">PERTANYAAN KUNCI</span>
+                  {{ s.tanya }}
+                </div>
+                </div>
+                </sc-if>
+              </article>
+            </sc-for>
+          </div>
+        </section>
+
+        <section id="forum" aria-labelledby="forum-h" style="margin-top:32px">
+          <div style="font-size:11px;letter-spacing:.08em;color:var(--color-accent-700);font-weight:700;margin-bottom:4px">KAMIS, 26 NOVEMBER 2026</div>
+          <h2 id="forum-h" style="font-family:var(--font-heading);font-size:18px;margin:0 0 10px;font-weight:800">Forum Diskusi Karhutla</h2>
+          <a href="forum-diskusi-karhutla.html" style="display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;border:2px solid var(--color-text);padding:14px 16px;text-decoration:none;color:var(--color-text);min-height:44px;box-sizing:border-box">
+            <span style="display:block;flex:1 1 300px;min-width:0">
+              <span style="display:block;font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.3">Strategi Penguatan Integrasi OMSP TNI dan Kolaborasi Lintas Sektor dalam Mitigasi, Penanggulangan dan Pemulihan Karhutla</span>
+              <span style="display:block;font-size:12px;color:var(--color-neutral-700);margin-top:4px;line-height:1.45">Keynote Pangdam XII/Tanjungpura dan tiga narasumber, susunan acara, bahan diskusi, serta tujuan dan peserta forum.</span>
+            </span>
+            <span style="display:block;flex:0 0 auto;font-size:12.5px;font-weight:800;color:var(--color-accent-700)">Buka halaman forum →</span>
+          </a>
+        </section>
+
+        <section aria-labelledby="sas-h" style="margin-top:28px">
+          <h3 id="sas-h" style="font-family:var(--font-heading);font-size:13px;margin:0 0 4px;font-weight:800;letter-spacing:.02em">DAFTAR SASARAN</h3>
+          <p style="font-size:11px;color:var(--color-neutral-700);margin:0 0 10px">Klik nama sasaran untuk membuka profil lengkapnya. Audiensi Bea Cukai Kalbar (Tim B, Sel 24 Nov, tentatif) belum punya profil.</p>
+          <ol class="kk-sas" style="margin:0;padding-left:24px;font-size:13px;line-height:1.9">
+            <li><a href="profil-01-pemprov-kalbar.html">Pemerintah Provinsi Kalbar</a></li>
+            <li><a href="profil-02-kodam-xii-tanjungpura.html">Kodam XII/Tanjungpura</a></li>
+            <li><a href="profil-03-lanud-supadio.html">Lanud Supadio</a></li>
+            <li><a href="profil-04-borneo-alumina-indonesia.html">PT Borneo Alumina Indonesia</a></li>
+            <li><a href="profil-05-energi-unggul-persada.html">PT Energi Unggul Persada (KPN Corp)</a></li>
+            <li><a href="profil-06-pacific-bio-industry.html">PT Pacific Bio Industry</a></li>
+            <li><a href="profil-07-pelabuhan-kijing.html">Pelabuhan Internasional Kijing</a></li>
+            <li><a href="profil-08-ki-sungai-kunyit.html">Kawasan Industri Sungai Kunyit</a></li>
+            <li><a href="profil-09-kodaeral-xii.html">Kodaeral XII</a></li>
+            <li><a href="profil-10-antam.html">PT Antam Tbk, site Anjongan</a></li>
+            <li><a href="profil-11-pln-uid-kalbar.html">PLN UID Kalimantan Barat</a></li>
+            <li><a href="profil-12-kesultanan-pontianak.html">Kesultanan Kadriah Pontianak</a></li>
+          </ol>
+        </section>
+      </div>
+
+      <aside id="rundown" class="kk-side" aria-labelledby="rundown-h" style="border-left:2px solid var(--color-divider);padding-left:24px">
+        <h2 id="rundown-h" style="font-family:var(--font-heading);font-size:18px;margin:0 0 4px;font-weight:800">Rencana Kegiatan</h2>
+        <p style="font-size:11.5px;color:var(--color-neutral-700);margin:0 0 12px">Semua waktu WIB. Sumber: Rundown Internal KKDN Kalbar (versi 3). Seragam tercantum per hari.</p>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:24px">
+          <sc-for list="{{ days }}" as="d" hint-placeholder-count="5">
+            <div style="{{ d.boxStyle }}">
+              <button type="button" onClick="{{ d.toggle }}" aria-expanded="{{ d.active }}" style="display:flex;width:100%;justify-content:space-between;align-items:baseline;gap:10px;background:transparent;border:0;padding:10px 12px;cursor:pointer;text-align:left;min-height:44px">
+                <span style="font-weight:800;font-family:var(--font-heading);font-size:13.5px">{{ d.dow }}</span>
+                <span style="display:flex;align-items:baseline;gap:10px">
+                  <span style="font-size:11.5px;color:var(--color-neutral-700)">{{ d.dateLabel }}</span>
+                  <span aria-hidden="true" style="font-size:15px;font-weight:800;color:var(--color-accent-700);width:14px;text-align:center">{{ d.icon }}</span>
+                </span>
+              </button>
+              <sc-if value="{{ d.active }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:0 12px 12px">
+                  <div style="font-size:11px;color:var(--color-neutral-800);line-height:1.5;margin-bottom:8px">{{ d.summary }}</div>
+                  <div style="display:flex;flex-direction:column;gap:6px">
+                    <sc-for list="{{ d.items }}" as="it" hint-placeholder-count="6">
+                      <sc-if value="{{ it.isHead }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:10.5px;font-weight:800;letter-spacing:.08em;color:var(--color-accent-700);margin-top:6px;padding-top:6px;border-top:2px solid var(--color-divider)">{{ it.text }}</div>
+                      </sc-if>
+                      <sc-if value="{{ it.isRow }}" hint-placeholder-val="{{ true }}">
+                        <div style="{{ it.style }}">
+                          <span style="font-weight:700;white-space:nowrap">{{ it.time }}</span> — {{ it.text }}
+                          <sc-if value="{{ it.hasNote }}" hint-placeholder-val="{{ false }}">
+                            <div style="font-size:11px;color:var(--color-accent-700);margin-top:2px;white-space:pre-line">{{ it.note }}</div>
+                          </sc-if>
+                        </div>
+                      </sc-if>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ d.hasStay }}" hint-placeholder-val="{{ true }}">
+                    <div style="font-size:11px;margin-top:10px;padding-top:8px;border-top:2px solid var(--color-divider)"><span style="font-weight:800;letter-spacing:.04em">PENGINAPAN</span> · {{ d.stay }}</div>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <h3 style="font-family:var(--font-heading);font-size:13px;margin:0 0 10px;font-weight:800;letter-spacing:.02em">KALENDER NOVEMBER 2026</h3>
+        <div style="border:2px solid var(--color-divider);padding:12px;margin-bottom:24px">
+          <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;margin-bottom:6px">
+            <sc-for list="{{ weekdayLabels }}" as="w" hint-placeholder-count="7">
+              <div style="font-size:10px;text-align:center;color:var(--color-neutral-700);font-weight:700">{{ w }}</div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px">
+            <sc-for list="{{ calendarCells }}" as="c" hint-placeholder-count="35">
+              <div style="{{ c.style }}">{{ c.num }}</div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 14px;font-size:10.5px;color:var(--color-neutral-800);margin-top:10px">
+            <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#ec3013;display:inline-block"></span>Hari dipilih</span>
+            <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#d7d3d3;display:inline-block"></span>Hari kunjungan</span>
+            <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#f5860b;display:inline-block"></span>Hari ini</span>
+          </div>
+        </div>
+
+        <h3 style="font-family:var(--font-heading);font-size:13px;margin:0 0 4px;font-weight:800;letter-spacing:.02em">KOMPOSISI TIM</h3>
+        <p style="font-size:11px;color:var(--color-neutral-700);margin:0 0 10px">Tim dibagi pada Selasa dan Rabu; Kamis–Sabtu tim bergabung.</p>
+        <div role="group" aria-label="Pilih hari komposisi tim" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          <sc-for list="{{ teamTabs }}" as="tt" hint-placeholder-count="2">
+            <button type="button" onClick="{{ tt.pick }}" aria-pressed="{{ tt.pressed }}" style="{{ tt.style }}">{{ tt.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ activeTeams }}" as="tm" hint-placeholder-count="2">
+            <div style="border:2px solid var(--color-divider);padding:10px 12px">
+              <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+                <span style="font-family:var(--font-heading);font-weight:800;font-size:13.5px">{{ tm.name }}</span>
+                <span style="font-size:11px;color:var(--color-neutral-700)">{{ tm.note }}</span>
+              </div>
+              <ol style="margin:0;padding-left:20px;font-size:11.5px;line-height:1.55">
+                <sc-for list="{{ tm.members }}" as="mb" hint-placeholder-count="6">
+                  <li>{{ mb }}</li>
+                </sc-for>
+              </ol>
+            </div>
+          </sc-for>
+        </div>
+      </aside>
+    </div>
+
+    <footer style="margin-top:36px;padding-top:14px;border-top:2px solid var(--color-divider);font-size:11px;line-height:1.55;color:var(--color-neutral-700)">
+      Sumber: Rundown Internal KKDN Kalbar (versi 3); rundown Forum Diskusi; TOR KKDN Kedeputian Bidang Geoekonomi DPN ke Kalbar; TOR Forum Diskusi dan narasumber; 12 profil instansi KKDN Kalbar (riset sumber terbuka per 20 November 2026: BNPB, BPS, BI, PLN, MIND ID, Pelindo, APROBI dan media; daftar lengkap di halaman profil). Angka bertanda [Est.] adalah estimasi penyusun. Nama pejabat dapat berubah karena mutasi; cek ulang sebelum audiensi.
+    </footer>
+  </div>
+</div>
+</template>
+<script src="assets/leaflet/leaflet.js"></script>
+<script src="assets/dc-lite.js"></script>
+<script>
+const TEMA = [
+  { id: "semua", label: "Semua sasaran" },
+  { id: "pertahanan", label: "TNI & karhutla" },
+  { id: "bauksit", label: "Bauksit, pelabuhan & kawasan" },
+  { id: "sawit", label: "Sawit & biodiesel" },
+  { id: "daerah", label: "Pemda, listrik & adat" }
+];
+
+const FILES = {
+  1: "profil-01-pemprov-kalbar.html",
+  2: "profil-02-kodam-xii-tanjungpura.html",
+  3: "profil-03-lanud-supadio.html",
+  4: "profil-04-borneo-alumina-indonesia.html",
+  5: "profil-05-energi-unggul-persada.html",
+  6: "profil-06-pacific-bio-industry.html",
+  7: "profil-07-pelabuhan-kijing.html",
+  8: "profil-08-ki-sungai-kunyit.html",
+  9: "profil-09-kodaeral-xii.html",
+  10: "profil-10-antam.html",
+  11: "profil-11-pln-uid-kalbar.html",
+  12: "profil-12-kesultanan-pontianak.html"
+};
+
+const SHORT = {
+  1: "Pemprov", 2: "Kodam XII", 3: "Lanud Supadio", 4: "BAI", 5: "EUP", 6: "PBI",
+  7: "Kijing", 8: "KI Sungai Kunyit", 9: "Kodaeral XII", 10: "Antam", 11: "PLN UID", 12: "Kesultanan"
+};
+
+const p = (lead, rest) => ({ lead, rest });
+
+const SASARAN = [
+  { no: 1, tema: "daerah", tim: "A", nama: "Pemerintah Provinsi Kalimantan Barat", meta: "Sel, 24 Nov · 15.00–16.00 · audiensi Gubernur Ria Norsan, didampingi Kepala BPBD, Kadis Perindag ESDM dan Kadis LHK",
+    pointers: [
+      p("Karhutla terluas nasional:", "48.535,73 ha per September 2026 (BNPB), hampir dua kali total 2025 (26.703 ha); siaga darurat bencana asap 2 Februari–15 November."),
+      p("Ekonomi melambat tiap triwulan:", "6,14% (TW I), 5,61% (TW II), 5,24% (TW III-2026); nasional TW III 5,47%."),
+      p("Listrik rapuh:", "pemadaman bergilir 2–12 Juli (boiler PLTU 100 MW bocor) dan Oktober (pemeliharaan mayor PLTU Bengkayang); beban puncak ±650 MW.")
+    ],
+    tanya: "Berapa kerugian ekonomi karhutla 2026 menurut hitungan Pemprov, dan dukungan konkret apa yang diminta dari TNI untuk musim karhutla 2027?" },
+  { no: 2, tema: "pertahanan", tim: "A", nama: "Kodam XII/Tanjungpura", meta: "Sel, 24 Nov · 16.20–17.30 · audiensi Pangdam Mayjen TNI Novi Rubadi Sugito · Makodam, Kubu Raya",
+    pointers: [
+      p("Fokus Kalbar sejak 2025:", "Kalteng pindah ke Kodam XXII/Tambun Bungai (Agustus 2025); Kodam XII juga menjadi Kogasgabpamtaswil Darat RI–Malaysia."),
+      p("OMSP 2026:", "pemadaman karhutla (Kodim 1207/Pontianak di Kubu Raya), distribusi air bersih saat kekeringan, TMMD dan Karya Bakti."),
+      p("Narkotika lintas batas:", "penyelundupan sabu 55,297 kg (Maret) dan 21,4 kg (Juni 2026) digagalkan di perbatasan.")
+    ],
+    tanya: "Berapa personel dan hari operasi yang dikerahkan untuk karhutla 2026, dan apa hambatan terbesar integrasi OMSP Kodam dengan BPBD dan Manggala Agni?" },
+  { no: 3, tema: "pertahanan", tim: "B", nama: "Lanud Supadio", meta: "Sel, 24 Nov · 14.45–15.45 · audiensi Danlanud Marsma TNI Dedy Supriyanto (menjabat sejak ±akhir Oktober 2026)",
+    pointers: [
+      p("Pusat operasi udara karhutla:", "Agustus 2026 Satgas Udara menyiagakan 8 armada, 6 di Supadio untuk patroli dan water bombing; CASA dari Skadron Udara 4 Malang untuk OMC."),
+      p("Rapat Presiden:", "Presiden Prabowo memimpin rapat penanganan karhutla di Lanud Supadio, 22 Agustus 2026, dan memerintahkan tambahan personel dan helikopter."),
+      p("Batas operasi udara:", "water bombing helikopter tidak bisa malam hari; BNPB menilai penyemaian awan banyak tidak efektif karena awan sulit terbentuk.")
+    ],
+    tanya: "Berapa sorti water bombing dan OMC dari Supadio pada 2026, dan apa yang dibutuhkan agar operasi udara bisa dimulai lebih dini pada 2027?" },
+  { no: 4, tema: "bauksit", tim: "A", nama: "PT Borneo Alumina Indonesia (BAI)", meta: "Rab, 25 Nov · 09.30–10.30 · audiensi dan peninjauan SGAR Fase I & II · Bukit Batu, Sungai Kunyit",
+    pointers: [
+      p("Fase I belum penuh:", "pengiriman Januari–September 2026 546.667 ton alumina, setara ±730 ribu ton setahun [Est.] dari kapasitas 1 juta ton; rekor bulanan 91.793 ton (September)."),
+      p("Fase II besar:", "groundbreaking 6 Februari 2026; SGAR II, smelter aluminium 600 ribu ton dan pembangkit bernilai Rp87,7–104,5 triliun (beda antarsumber)."),
+      p("Listrik dan bauksit:", "Fase II butuh 931 MW–1,2 GW dari PLTU PTBA (6×200 MW) yang masih mencari mitra; tambahan bauksit ±3,3 juta ton per tahun [Est.].")
+    ],
+    tanya: "Apa hambatan utama mencapai 1 juta ton per tahun, dan bagaimana rencana pasokan listrik serta bauksit untuk Fase II beserta risikonya?" },
+  { no: 5, tema: "sawit", tim: "A", nama: "PT Energi Unggul Persada (KPN Corp)", meta: "Rab, 25 Nov · 10.40–11.30 · dialog, dilanjutkan ishoma di lokasi hingga 13.00",
+    pointers: [
+      p("Kapasitas biodiesel besar:", "pabrik Mempawah 1.287.000 ton per tahun (APROBI), ±6–7% kapasitas nasional [Est.]; perusahaan CPO pertama yang ekspor lewat Kijing."),
+      p("B50 dievaluasi ulang:", "B50 berlaku sejak Juli 2026, penyaluran baru ±80% hingga akhir Agustus; pemerintah menilai ulang mandat karena pasokan CPO dan dana BPDP (13 November)."),
+      p("Kepemilikan belum jelas:", "sumber terbuka menyebut KPN Corp, satu artikel menyebut Wilmar; direksi dan komisaris EUP tidak ditemukan.")
+    ],
+    tanya: "Bagaimana dampak evaluasi B50 terhadap rencana produksi dan investasi, dan berapa porsi CPO yang berasal dari petani swadaya Kalbar?" },
+  { no: 6, tema: "sawit", tim: "A", nama: "PT Pacific Bio Industry (PBI)", meta: "Rab, 25 Nov · 13.10–14.00 · dialog hilirisasi sawit–biodiesel · kawasan pendukung Terminal Kijing",
+    pointers: [
+      p("Refinery di kawasan Kijing:", "kapasitas awal 550.000 ton per tahun, bermitra dengan Pelindo Solusi Logistik sejak 2023; target produksi pertengahan 2025."),
+      p("Status belum pasti:", "lowongan Refinery Foreman dan teknisi (Oktober 2026) menandakan pabrik sudah atau hampir beroperasi; pemilik dan direksi tidak ditemukan di sumber terbuka."),
+      p("Biodiesel perlu dicek:", "rundown menyebut sawit–biodiesel, tetapi sumber publik hanya menyebut pemurnian dan fraksionasi.")
+    ],
+    tanya: "Siapa pemegang saham dan grup induk PBI, kapan produksi komersial penuh tercapai, dan adakah rencana unit biodiesel di tengah evaluasi B50?" },
+  { no: 7, tema: "bauksit", tim: "A", nama: "Pelabuhan Internasional Kijing", meta: "Rab, 25 Nov · 14.10–15.30 · peninjauan bersama KI Sungai Kunyit · GM Pelindo Regional 2 Dewa Cipta Hadi",
+    pointers: [
+      p("Pelabuhan terbesar Kalimantan:", "diresmikan Agustus 2022 dengan investasi Rp2,9 triliun; dirancang untuk kapal hingga 100.000 DWT."),
+      p("Bergantung pada MIND ID:", "kargo Grup MIND ID ±72% pendapatan terminal hingga Agustus 2026; curah kering ±45% kapasitas tahap awal [Est.]."),
+      p("Peti kemas baru mulai:", "layanan sejak Juni 2026, 2.221 TEU hingga September; akses darat dan rencana tol Supadio–Kijing (±100 km) belum terwujud.")
+    ],
+    tanya: "Berapa target utilisasi 2027 dan dari pelanggan mana, dan kapan jalan akses serta tol Supadio–Kijing realistis selesai?" },
+  { no: 8, tema: "bauksit", tim: "A", nama: "Kawasan Industri Sungai Kunyit", meta: "Rab, 25 Nov · 14.10–15.30 · peninjauan bersama Pelabuhan Kijing · Bupati Mempawah Erlina",
+    pointers: [
+      p("Bukan satu pengelola:", "gabungan kawasan pendukung Terminal Kijing (124,09 ha), kompleks SGAR dan smelter MIND ID, serta pabrik sawit; status kawasan industri atau KEK tidak ditemukan."),
+      p("Investasi di atas Rp100 triliun:", "Rp107–127 triliun [Est.] dari SGAR I–II, smelter, pembangkit, Kijing dan dua investor sawit; KPI dalam RDTR baru 600 ha."),
+      p("Warga belum ikut naik:", "prevalensi kekurangan konsumsi pangan Mempawah 14,89% (2025), hampir dua kali nasional 7,89%.")
+    ],
+    tanya: "Siapa yang bertanggung jawab atas infrastruktur bersama kawasan, dan dukungan pusat apa yang paling dibutuhkan: tata ruang, KEK, jalan, atau listrik?" },
+  { no: 9, tema: "pertahanan", tim: "B", nama: "Kodaeral XII", meta: "Rab, 25 Nov · 08.30–10.00 · audiensi Dankodaeral Laksda TNI Sawa · Wajok Hilir, Mempawah",
+    pointers: [
+      p("Komando baru:", "peningkatan dari Lantamal XII, satu dari 14 Kodaeral yang diresmikan Agustus 2025; wilayah dekat Laut Natuna dan ALKI I."),
+      p("Objek vital bertambah:", "Kijing, SGAR, smelter, PLTU dan pabrik sawit di pesisir Mempawah; Juli 2026 bersinergi dengan PT ICA untuk pengamanan objek vital."),
+      p("Ikut tangani karhutla:", "personel TNI AL membantu pemadaman karhutla di Sambas.")
+    ],
+    tanya: "Apa ancaman maritim utama di perairan Kalbar, dan bagaimana pembagian pengamanan objek vital industri di pesisir Mempawah?" },
+  { no: 10, tema: "bauksit", tim: "B", nama: "PT Antam Tbk, site bauksit Anjongan", meta: "Rab, 25 Nov · 12.00–14.30 · ishoma, diskusi dan peninjauan rantai pasok pemenuhan bauksit",
+    pointers: [
+      p("Pemasok utama SGAR:", "pemegang 40% saham BAI; penjualan bauksit semester I-2026 ±1,3 juta wmt (naik 24,4%), sedangkan SGAR Fase I butuh ±3,3 juta ton per tahun."),
+      p("Proyek di Mempawah:", "fasilitas pencucian bauksit 1,47 juta ton per tahun dan kontrak jasa tambang Rp870 miliar ke PP Presisi (mulai TW II-2026)."),
+      p("Tambang bisa beralih:", "MIND ID menargetkan Inalum punya tambang bauksit sendiri sebelum 2030, termasuk membeli tambang Antam dekat BAI.")
+    ],
+    tanya: "Berapa pasokan bauksit Antam ke BAI pada 2026 dan porsi kebutuhan SGAR yang terpenuhi, serta kapan fasilitas pencucian 1,47 juta ton beroperasi?" },
+  { no: 11, tema: "daerah", tim: "G", nama: "PLN UID Kalimantan Barat", meta: "Jum, 27 Nov · 09.00–10.00 · audiensi GM Maria Goretti Indrawati Gunawan",
+    pointers: [
+      p("Cadangan tipis:", "dua kali pemadaman bergilir 2026; PLTU Bengkayang (80 MW netto, ±12% beban puncak) dipelihara ±54 hari sejak Oktober."),
+      p("Masih impor dari Sarawak:", "RUPTL 2025–2034 menyebut impor dari SEB masih diperlukan sampai pembangkit dan transmisi baru beroperasi."),
+      p("Industri besar memilih captive:", "kebutuhan SGAR II dan smelter (931 MW–1,2 GW) melebihi seluruh beban sistem dan dipasok PLTU PTBA.")
+    ],
+    tanya: "Apa langkah agar pemadaman bergilir tidak terulang pada 2027, dan bagaimana PLN menjamin listrik untuk posko, penerangan dan pompa operasi karhutla?" },
+  { no: 12, tema: "daerah", tim: "G", nama: "Kesultanan Kadriah Pontianak", meta: "Jum, 27 Nov · 14.00–15.00 · audiensi YM Sultan Syarif Machmud Melvin Alkadrie, didahului Salat Jumat di Masjid Sultan",
+    pointers: [
+      p("Tokoh adat sekaligus senator:", "Sultan Pontianak IX sejak 2017 dan anggota DPD RI dapil Kalbar 2024–2029 (399.273 suara)."),
+      p("Bersuara soal asap dan BBM:", "pada 2026 Sultan mengingatkan bahaya asap karhutla bagi kesehatan warga dan meminta distribusi BBM dibenahi."),
+      p("Arah audiensi (TOR):", "peran kearifan lokal dalam pencegahan karhutla dan pemulihan kawasan terdampak.")
+    ],
+    tanya: "Peran apa yang dapat dimainkan lembaga adat dalam kampanye pencegahan pembakaran lahan dan menjaga kohesi sosial di tengah masuknya industri besar?" }
+];
+
+const ISU = [
+  { id: "karhutla", judul: "Karhutla 2026", utama: true, rel: [1, 2, 3, 9, 5, 6], poin: [
+    "Terluas nasional: 48.535,73 ha per September (BNPB); Januari–Juni saja 28.680 ha, sudah melampaui total 2025.",
+    "Walhi mengklaim ±74% hotspot di Kalimantan berada di dalam konsesi perusahaan.",
+    "Pertumbuhan ekonomi Kalimantan TW III-2026 melambat ke 3,96% di tengah karhutla."
+  ]},
+  { id: "listrik", judul: "Keandalan listrik", rel: [1, 4, 7, 8, 11], poin: [
+    "Beban puncak sistem Khatulistiwa ±650 MW; impor dari Sarawak masih dibutuhkan.",
+    "SGAR II dan smelter butuh 931 MW–1,2 GW, lebih besar dari seluruh beban sistem.",
+    "Kijing tersambung 2,7 MW dan bertahap ke 6,9 MW."
+  ]},
+  { id: "bauksit", judul: "Hilirisasi bauksit–alumina–aluminium", rel: [1, 4, 7, 8, 10, 11], poin: [
+    "Rantai lengkap di Mempawah: bauksit Antam, alumina BAI, lalu aluminium dari smelter baru 600 ribu ton.",
+    "Investasi hilirisasi bauksit nasional mencapai rekor Rp40,1 triliun pada TW II-2026.",
+    "Alumina dikirim lewat Kijing ke smelter Inalum di Kuala Tanjung; sisa ±450 ribu ton per tahun diekspor."
+  ]},
+  { id: "sawit", judul: "Sawit dan B50", rel: [1, 5, 6, 7, 8], poin: [
+    "B50 berlaku Juli 2026, penyaluran ±80% hingga akhir Agustus, dan kini dinilai ulang (13 November).",
+    "Malaysia tujuan ekspor terbesar Kalbar (38%, Juni 2026), terutama fraksi cair minyak sawit.",
+    "Empat investor sawit di kawasan Kijing: EUP, PBI, Grup Apical dan Riya Pacific Nabati."
+  ]},
+  { id: "perbatasan", judul: "Perbatasan dan objek vital", rel: [2, 3, 9], poin: [
+    "Kalbar berbatasan darat dengan Sarawak; Kodam XII menjadi Kogasgabpamtaswil Darat RI–Malaysia.",
+    "Drone Anka-S pertama diterima di Lanud Supadio (September 2025).",
+    "Objek vital di pesisir Mempawah bertambah: Kijing, SGAR, smelter dan PLTU."
+  ]},
+  { id: "sosial", judul: "Kohesi sosial dan budaya", rel: [1, 12, 8], poin: [
+    "Gubernur menekankan investasi harus menciptakan lapangan kerja lokal, bukan hanya angka realisasi.",
+    "Kesultanan Kadriah (berdiri 1771) menjadi simbol persatuan masyarakat majemuk Kalbar.",
+    "Kekurangan konsumsi pangan di Mempawah 14,89% (2025), hampir dua kali rata-rata nasional."
+  ]}
+];
+
+const k = (time, text, note) => ({ kind: "key", time, text, note: note || "" });
+const t = (time, text, note) => ({ kind: "trip", time, text, note: note || "" });
+const h = (text) => ({ kind: "head", time: "", text, note: "" });
+
+const DAYS = [
+  { dow: "Selasa", dateLabel: "24 Nov", date: 24, summary: "Seragam: putih hitam. Tim dibagi dua setelah tiba di Pontianak.", stay: "Hotel Novotel Pontianak", items: [
+    t("08.00–09.00", "Perjalanan dari Kantor DPN ke Bandara Soekarno-Hatta (Terminal 3)"),
+    t("09.00–10.30", "Bagasi dan check in pesawat"),
+    t("11.50–13.25", "Tim DPN take off dari Soekarno-Hatta menuju Bandara Supadio Pontianak (Garuda)", "Siapkan tiket, protokol dan bagasi"),
+    t("13.25–14.30", "Ishoma di dekat Bandara Supadio (Pondok Orange Bubur Pedas, koordinasi LO)"),
+    h("TIM A"),
+    t("14.30–15.00", "Perjalanan ke Kantor Gubernur Kalbar"),
+    k("15.00–16.00", "Audiensi dengan Gubernur Kalbar: dampak karhutla, hilirisasi dan ketersediaan listrik", "Didampingi Kepala BPBD, Kadis Perindag ESDM dan Kadis LHK Kalbar"),
+    t("16.00–16.20", "Perjalanan ke Kodam XII/Tanjungpura"),
+    k("16.20–17.30", "Audiensi dengan Pangdam XII/Tanjungpura"),
+    h("TIM B"),
+    t("14.30–14.45", "Perjalanan ke Lanud Supadio"),
+    k("14.45–15.45", "Audiensi dengan Danlanud Supadio"),
+    k("16.15–17.00", "Audiensi dengan Bea Cukai Kalbar (tempat TBC)", "Alternatif 1: audiensi BC dilakukan dengan Pak Deputi dan Pak Abdul Kholiq yang ikut bergabung ke Tim B setelah selesai kegiatan Danlanud. \nAlternatif 2: audiensi BC dilakukan pada malam hari sambil makan malam di Pondok Ale-Ale"),
+    h("SEMUA TIM"),
+    t("18.00", "Check in Hotel Novotel Pontianak"),
+    t("19.00", "Makan malam di Pondok Ale-Ale, Jl. Ahmad Yani No. 46")
+  ]},
+  { dow: "Rabu", dateLabel: "25 Nov", date: 25, summary: "Seragam: abu-abu. Tim A dan Tim B ke Mempawah; Tim C menyiapkan Forum Diskusi di Lanud Supadio.", stay: "Hotel Novotel Pontianak", items: [
+    t("07.00", "Persiapan keberangkatan Tim A dan Tim B ke Mempawah", "Tim C (Kolonel Vila, Maundri, Haryo, Jordan) ke Lanud Supadio menyiapkan Forum Diskusi"),
+    h("TIM A"),
+    t("07.00–09.30", "Perjalanan ke PT Borneo Alumina Indonesia (BAI)"),
+    k("09.30–10.30", "Audiensi dan peninjauan PT BAI: SGAR Fase I & II"),
+    t("10.30–10.40", "Perjalanan ke PT Energi Unggul Persada (KPN Corp)"),
+    k("10.40–11.30", "Dialog dengan PT Energi Unggul Persada (KPN Corp)"),
+    t("11.30–13.00", "Ishoma di PT Energi Unggul Persada"),
+    t("13.00–13.10", "Perjalanan ke PT Pacific Bio Industry"),
+    k("13.10–14.00", "Dialog dengan PT Pacific Bio Industry (hilirisasi sawit–biodiesel)"),
+    t("14.00–14.10", "Perjalanan ke Pelabuhan Kijing dan Kawasan Industri Sungai Kunyit"),
+    k("14.10–15.30", "Peninjauan Pelabuhan Internasional Kijing dan Kawasan Industri Sungai Kunyit"),
+    t("15.30–18.00", "Perjalanan kembali ke Pontianak", "RV sekitar 16.00 mampir ke Pondok Pengkang dan Tugu Khatulistiwa (tentatif)"),
+    h("TIM B"),
+    t("07.00–08.30", "Perjalanan ke Kodaeral XII"),
+    k("08.30–10.00", "Audiensi dengan Dankodaeral XII"),
+    t("10.00–12.00", "Perjalanan ke site PT Antam di Anjongan, Mempawah"),
+    t("12.00–13.00", "Ishoma di PT Antam"),
+    k("13.00–14.30", "Diskusi dan peninjauan rantai pasok pemenuhan bauksit dengan PT Antam"),
+    t("14.30–17.30", "Perjalanan kembali ke Pontianak", "RV sekitar 16.00 mampir ke Pondok Pengkang dan Tugu Khatulistiwa (tentatif)"),
+    h("SEMUA TIM"),
+    t("19.00", "Makan malam bersama di Resto Pondok Kakap, lalu ke Lanud Supadio meninjau persiapan Forum Diskusi"),
+    t("20.30", "Executive program dan persiapan Forum Diskusi")
+  ]},
+  { dow: "Kamis", dateLabel: "26 Nov", date: 26, summary: "Seragam: putih hitam. Hari Forum Diskusi; susunan acara rinci ada di halaman Forum Diskusi Karhutla.", stay: "Hotel Novotel Pontianak", items: [
+    t("06.00–06.30", "Sarapan di Hotel Novotel"),
+    t("06.30–07.00", "Perjalanan ke Lanud Supadio"),
+    k("07.00–12.00", "Forum Diskusi karhutla: integrasi OMSP TNI dan kolaborasi lintas sektor", "Rincian acara, pembicara dan peserta ada di halaman Forum Diskusi Karhutla"),
+    t("12.00–14.00", "Ishoma di Lanud Supadio"),
+    k("14.00–15.00", "Diskusi internal"),
+    t("15.00–15.30", "Kembali ke hotel", "Alternatif ke Tugu Khatulistiwa (tentatif, bisa dilakukan siang hari sekitar pukul 13.00)"),
+    t("16.00–17.00", "Istirahat"),
+    t("17.00–19.00", "Free program"),
+    t("19.00–21.00", "Makan malam di Resto Abang Kepiting"),
+    t("21.00", "Kembali ke Hotel Novotel dan istirahat")
+  ]},
+  { dow: "Jumat", dateLabel: "27 Nov", date: 27, summary: "Seragam: bebas rapi (batik lengan pendek). Tim bergabung.", stay: "Hotel Novotel Pontianak", items: [
+    t("05.30–07.00", "Olahraga bersama: Taman Digulis, lanjut ngopi di Warkop Asiang"),
+    t("07.00–08.30", "Persiapan dan sarapan di Hotel Novotel"),
+    t("08.30–09.00", "Perjalanan ke PLN UID Kalbar"),
+    k("09.00–10.00", "Audiensi dengan PLN UID Kalbar"),
+    t("11.30–12.30", "Salat Jumat di Masjid Sultan Pontianak"),
+    t("12.30–14.00", "Makan siang (TBC)"),
+    k("14.00–15.00", "Audiensi bersama Sultan Pontianak"),
+    t("16.15–17.15", "Perjalanan ke Hotel Novotel", "Mampir oleh-oleh khas Pontianak atau ngopi di Aming"),
+    t("19.00–20.30", "Makan malam di Kampung Kecil (Jl. Dr. Wahidin) atau Dimsum Kitchen (Jl. Merdeka)")
+  ]},
+  { dow: "Sabtu", dateLabel: "28 Nov", date: 28, summary: "Seragam: bebas rapi.", stay: "", items: [
+    t("06.00–07.00", "Sarapan dan check out Hotel Novotel"),
+    t("07.00–07.30", "Perjalanan ke Bandara Supadio"),
+    t("07.30–08.00", "Bagasi dan check in pesawat"),
+    t("08.40–10.15", "Tim DPN take off dari Bandara Supadio menuju Soekarno-Hatta (Garuda)")
+  ]}
+];
+
+const TEAMS = [
+  { label: "Selasa, 24 Nov", teams: [
+    { name: "Tim A", note: "Gubernur · Pangdam", members: [
+      "Dr. Yayat Ruyat, M.Eng. (es I)",
+      "Mayjen TNI Tri Rana Subekti, S.Sos., M.M. (es I)",
+      "Mayjen TNI Dr. Helda Risman, M.Han., CIQaR. (es I)",
+      "Dr. Ing. M. Abdul Kholiq, M.Sc. (es I)",
+      "Kolonel Arm Dedy Soehartono, S.I.P. (es III)",
+      "Maundri Prihanggo, S.T., M.Sc. (es III)",
+      "Rennie Dwi Sulistyani, S.M., M.Tr.AP. (es IV)",
+      "Jordan Hendrix Setiawan, S.Kom. (es IV)",
+      "Joko Ardi, M.Si. (narasumber)"
+    ]},
+    { name: "Tim B", note: "Danlanud · Bea Cukai", members: [
+      "Prof. Dr. Surachman Surjaatmadja (es I)",
+      "Dr. Tri Budi Haryoko, A.Md.IP., S.H., M.H. (es II)",
+      "Laksma TNI Agustinus Djoko Priyanto, S.E., M.Si. (es II)",
+      "Marsma TNI Muhamad Agus Fauzan, M.Sc. (es II)",
+      "Kolonel Laut (T) Robert Litanto, S.T., M.M., M.Tr.Han. (es III)",
+      "Kolonel Sus Revila Oulina, S.Pd., M.M.Pd., M.Si. (es III)",
+      "Haryo Sasmito, S.E. (es IV)",
+      "Imam Arif Rahman, S.T. (es IV)"
+    ]}
+  ]},
+  { label: "Rabu, 25 Nov", teams: [
+    { name: "Tim A", note: "BAI · EUP · PBI · Kijing", members: [
+      "Dr. Yayat Ruyat, M.Eng. (es I)",
+      "Mayjen TNI Dr. Helda Risman, M.Han., CIQaR. (es I)",
+      "Prof. Dr. Surachman Surjaatmadja (es I)",
+      "Dr. Tri Budi Haryoko, A.Md.IP., S.H., M.H. (es II)",
+      "Kolonel Arm Dedy Soehartono, S.I.P. (es III)",
+      "Rennie Dwi Sulistyani, S.M., M.Tr.AP. (es IV)",
+      "Joko Ardi, M.Si. (narasumber)"
+    ]},
+    { name: "Tim B", note: "Kodaeral XII · Antam", members: [
+      "Mayjen TNI Tri Rana Subekti, S.Sos., M.M. (es I)",
+      "Dr. Ing. M. Abdul Kholiq, M.Sc. (es I)",
+      "Laksma TNI Agustinus Djoko Priyanto, S.E., M.Si. (es II)",
+      "Marsma TNI Muhamad Agus Fauzan, M.Sc. (es II)",
+      "Kolonel Laut (T) Robert Litanto, S.T., M.M., M.Tr.Han. (es III)",
+      "Imam Arif Rahman, S.T. (es IV)"
+    ]},
+    { name: "Tim C", note: "Persiapan Forum Diskusi", members: [
+      "Kolonel Sus Revila Oulina, S.Pd., M.M.Pd., M.Si. (es III)",
+      "Maundri Prihanggo, S.T., M.Sc. (es III)",
+      "Haryo Sasmito, S.E. (es IV)",
+      "Jordan Hendrix Setiawan, S.Kom. (es IV)"
+    ]}
+  ]}
+];
+
+const LOKASI = [
+  { no: 1, nama: "Kantor Gubernur Kalbar", lat: -0.0470, lon: 109.3430, waktu: "Sel, 24 Nov · 15.00–16.00 WIB", ket: "Jl. Ahmad Yani, Pontianak · posisi indikatif" },
+  { no: 2, nama: "Makodam XII/Tanjungpura", lat: -0.0930, lon: 109.3780, waktu: "Sel, 24 Nov · 16.20–17.30 WIB", ket: "Jl. Arteri Supadio, Kubu Raya · posisi indikatif" },
+  { no: 3, nama: "Lanud Supadio", lat: -0.1486, lon: 109.4042, waktu: "Sel, 24 Nov · 14.45–15.45 WIB", ket: "Sungai Raya, Kubu Raya" },
+  { no: 4, nama: "PT Borneo Alumina Indonesia (SGAR)", lat: 0.4750, lon: 108.9250, waktu: "Rab, 25 Nov · 09.30–10.30 WIB", ket: "Bukit Batu, Sungai Kunyit · posisi indikatif" },
+  { no: 5, nama: "PT Energi Unggul Persada", lat: 0.4400, lon: 108.9050, waktu: "Rab, 25 Nov · 10.40–13.00 WIB", ket: "Bersebelahan dengan Kijing · posisi indikatif" },
+  { no: 6, nama: "PT Pacific Bio Industry", lat: 0.4560, lon: 108.9120, waktu: "Rab, 25 Nov · 13.10–14.00 WIB", ket: "Kawasan pendukung Terminal Kijing · posisi indikatif" },
+  { no: 7, nama: "Pelabuhan Internasional Kijing", lat: 0.4520, lon: 108.8880, waktu: "Rab, 25 Nov · 14.10–15.30 WIB", ket: "Sungai Kunyit, Mempawah · posisi indikatif" },
+  { no: 8, nama: "Kawasan Industri Sungai Kunyit", lat: 0.4900, lon: 108.9400, waktu: "Rab, 25 Nov · 14.10–15.30 WIB", ket: "Kec. Sungai Kunyit · posisi indikatif" },
+  { no: 9, nama: "Mako Kodaeral XII", lat: 0.1100, lon: 109.1750, waktu: "Rab, 25 Nov · 08.30–10.00 WIB", ket: "Wajok Hilir, Mempawah · posisi indikatif" },
+  { no: 10, nama: "PT Antam, site bauksit Anjongan", lat: 0.3900, lon: 109.0900, waktu: "Rab, 25 Nov · 12.00–14.30 WIB", ket: "Anjongan, Mempawah · posisi indikatif" },
+  { no: 11, nama: "PLN UID Kalimantan Barat", lat: -0.0600, lon: 109.3620, waktu: "Jum, 27 Nov · 09.00–10.00 WIB", ket: "Pontianak · posisi indikatif" },
+  { no: 12, nama: "Istana Kadriah, Kesultanan Pontianak", lat: -0.0300, lon: 109.3480, waktu: "Jum, 27 Nov · 14.00–15.00 WIB", ket: "Kampung Beting, Pontianak Timur" }
+];
+
+const DAY_MS = 86400000;
+const START = Date.UTC(2026, 10, 23, 17, 0, 0); // 24 Nov 2026 00.00 WIB
+const END = Date.UTC(2026, 10, 28, 1, 40, 0); // 28 Nov 2026 08.40 WIB, take off pulang
+
+function wibNow() {
+  const now = Date.now();
+  const d = new Date(now + 7 * 3600000);
+  return { ms: now, y: d.getUTCFullYear(), m: d.getUTCMonth(), day: d.getUTCDate() };
+}
+
+function initialState() {
+  const w = wibNow();
+  const during = w.y === 2026 && w.m === 10 && w.day >= 24 && w.day <= 28;
+  return { tema: "semua", activeDay: during ? w.day - 24 : 0, isuOpen: { karhutla: true }, sasOpen: {}, teamDay: (during && w.day === 25) ? 1 : 0 };
+}
+
+function pad(n) { return n < 10 ? "0" + n : String(n); }
+
+class Component extends DCLogic {
+  state = initialState();
+
+  componentDidMount() {
+    this._tick = setInterval(() => this.forceUpdate(), 60000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._tick);
+    clearTimeout(this._mapWait);
+    if (this._map) { this._map.remove(); this._map = null; }
+  }
+
+  setMapEl(el) {
+    this._mapEl = el;
+    if (el) this.initMap();
+  }
+
+  initMap() {
+    if (this._map || !this._mapEl) return;
+    const L = window.L;
+    if (!L) { clearTimeout(this._mapWait); this._mapWait = setTimeout(() => this.initMap(), 200); return; }
+    const map = L.map(this._mapEl, { scrollWheelZoom: false, zoomControl: true, dragging: !L.Browser.mobile, tap: false });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
+    }).addTo(map);
+    const pts = [];
+    this._pins = [];
+    LOKASI.forEach((l) => {
+      const icon = L.divIcon({ className: "kk-pin", html: String(l.no), iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
+      const m = L.marker([l.lat, l.lon], { icon, title: l.nama, keyboard: true }).addTo(map);
+      m.bindPopup("<strong>" + l.no + ". " + l.nama + "</strong><br>" + l.waktu + "<br><span style=\"color:#605d5d\">" + l.ket + "</span>");
+      this._pins.push({ no: l.no, marker: m, latlng: L.latLng(l.lat, l.lon) });
+      pts.push([l.lat, l.lon]);
+    });
+    map.fitBounds(pts, { padding: [40, 40] });
+    map.on("click focus", () => map.scrollWheelZoom.enable());
+    map.on("mouseout blur", () => map.scrollWheelZoom.disable());
+    map.on("zoomend", () => this.layoutPins());
+    this._map = map;
+    this.layoutPins();
+    setTimeout(() => { map.invalidateSize(); this.layoutPins(); }, 300);
+  }
+
+  layoutPins() {
+    // Pins closer than one badge are lined up side by side around their shared centre so no number covers another.
+    const map = this._map, L = window.L;
+    if (!map || !L || !this._pins) return;
+    const GAP = 28;
+    const items = this._pins.map((o) => ({ o, p: map.latLngToLayerPoint(o.latlng) }));
+    const seen = new Set();
+    const groups = [];
+    items.forEach((it, i) => {
+      if (seen.has(i)) return;
+      const g = [i]; seen.add(i);
+      for (let k = 0; k < g.length; k++) {
+        items.forEach((other, j) => {
+          if (seen.has(j)) return;
+          const a = items[g[k]].p;
+          if (Math.abs(a.x - other.p.x) < GAP && Math.abs(a.y - other.p.y) < GAP) { g.push(j); seen.add(j); }
+        });
+      }
+      groups.push(g.map((idx) => items[idx]));
+    });
+    groups.forEach((g) => {
+      g.sort((a, b) => a.o.no - b.o.no);
+      const cx = g.reduce((s, it) => s + it.p.x, 0) / g.length;
+      const cy = g.reduce((s, it) => s + it.p.y, 0) / g.length;
+      g.forEach((it, i) => {
+        const dx = g.length > 1 ? (i - (g.length - 1) / 2) * GAP : 0;
+        const tx = g.length > 1 ? cx + dx : it.p.x;
+        const ty = g.length > 1 ? cy : it.p.y;
+        const ax = it.p.x - tx + 12, ay = it.p.y - ty + 12;
+        it.o.marker.setIcon(L.divIcon({ className: "kk-pin", html: String(it.o.no), iconSize: [24, 24], iconAnchor: [ax, ay], popupAnchor: [12 - ax, -ay] }));
+      });
+    });
+  }
+
+  renderVals() {
+    const w = wibNow();
+    const diffDays = Math.ceil((START - w.ms) / DAY_MS);
+    let countdownValue, countdownLabel;
+    if (w.ms >= END) { countdownValue = "Selesai"; countdownLabel = "KUNJUNGAN 24–28 NOV TELAH BERAKHIR"; }
+    else if (diffDays > 0) { countdownValue = "H-" + diffDays; countdownLabel = "MENUJU KUNJUNGAN"; }
+    else { countdownValue = "Hari " + (1 - diffDays) + "/5"; countdownLabel = "KUNJUNGAN BERLANGSUNG"; }
+
+    const ORD = ["Pertama", "Kedua", "Ketiga", "Keempat", "Kelima"];
+    let dayBannerTitle, dayBannerSub;
+    if (w.ms >= END) { dayBannerTitle = "KEGIATAN SELESAI"; dayBannerSub = "KKDN Kalbar 24–28 November 2026 telah berakhir"; }
+    else if (diffDays > 0) { dayBannerTitle = "H-" + diffDays; dayBannerSub = "menuju Hari Pertama · Selasa, 24 November 2026"; }
+    else {
+      const idx = Math.min(4, -diffDays);
+      const dd = DAYS[idx];
+      dayBannerTitle = "HARI " + ORD[idx].toUpperCase();
+      dayBannerSub = dd.dow + ", " + dd.date + " November 2026";
+    }
+
+    const MONTHS = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
+    const monthLabels = MONTHS.map((lab, i) => ({
+      label: lab,
+      style: "left:" + (4.17 + i * 8.333).toFixed(2) + "%;top:46px;transform:translateX(-50%);font-weight:600;font-size:9.5px"
+    }));
+
+    const tabBase = "text-align:left;padding:10px 14px;min-height:44px;border:2px solid var(--color-text);font-family:var(--font-heading);font-weight:800;font-size:12.5px;cursor:pointer;";
+    const tabs = TEMA.map((tm) => {
+      const on = this.state.tema === tm.id;
+      const n = tm.id === "semua" ? SASARAN.length : SASARAN.filter((s) => s.tema === tm.id).length;
+      return {
+        label: tm.label, count: n + " SASARAN", pressed: on,
+        style: tabBase + (on ? "background:var(--color-text);color:var(--color-bg)" : "background:var(--color-bg);color:var(--color-text)"),
+        pick: () => this.setState({ tema: tm.id })
+      };
+    });
+
+    const TIM_STYLE = {
+      A: ["TIM A", "background:#201e1d;color:#f3f2f2"],
+      B: ["TIM B", "background:#ff9783;color:#201e1d"],
+      G: ["TIM GABUNGAN", "background:#d7d3d3;color:#201e1d"]
+    };
+    const sasOpen = this.state.sasOpen || {};
+    const activeSasaran = SASARAN
+      .filter((s) => this.state.tema === "semua" || s.tema === this.state.tema)
+      .map((s) => ({
+        ...s,
+        noLabel: pad(s.no),
+        profil: FILES[s.no],
+        open: !!sasOpen[s.no],
+        icon: sasOpen[s.no] ? "−" : "+",
+        toggle: () => this.setState((st) => ({ sasOpen: { ...(st.sasOpen || {}), [s.no]: !(st.sasOpen || {})[s.no] } })),
+        timLabel: TIM_STYLE[s.tim][0],
+        tagStyle: "font-size:10px;font-weight:800;letter-spacing:.04em;padding:3px 7px;white-space:nowrap;" + TIM_STYLE[s.tim][1]
+      }));
+
+    const isuOpen = this.state.isuOpen || {};
+    const isu = ISU.map((x) => ({
+      judul: x.judul,
+      poin: x.poin,
+      open: !!isuOpen[x.id],
+      icon: isuOpen[x.id] ? "−" : "+",
+      tag: x.rel.length + " SASARAN",
+      tagStyle: "flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 7px;white-space:nowrap;" +
+        (x.utama ? "background:#dd2b0f;color:#ffffff" : "background:#d7d3d3;color:#201e1d"),
+      boxStyle: "align-self:start;border:2px solid " + (x.utama ? "var(--color-text)" : "var(--color-divider)"),
+      rel: x.rel.slice().sort((a, b) => a - b).map((n) => ({ label: pad(n) + " " + SHORT[n], file: FILES[n] })),
+      toggle: () => this.setState((st) => ({ isuOpen: { ...(st.isuOpen || {}), [x.id]: !(st.isuOpen || {})[x.id] } }))
+    }));
+
+    const days = DAYS.map((d, i) => {
+      const active = this.state.activeDay === i;
+      return {
+        dow: "Hari " + ORD[i] + " · " + d.dow, dateLabel: d.dateLabel, summary: d.summary, stay: d.stay, hasStay: !!d.stay,
+        active, icon: active ? "−" : "+",
+        toggle: () => this.setState((s) => ({ activeDay: s.activeDay === i ? null : i })),
+        boxStyle: "border:2px solid " + (active ? "var(--color-text)" : "var(--color-divider)") + ";background:" + (active ? "var(--color-neutral-100)" : "transparent"),
+        items: d.items.map((it) => ({
+          time: it.time, text: it.text, note: it.note, hasNote: !!it.note,
+          isHead: it.kind === "head", isRow: it.kind !== "head",
+          style: it.kind === "key"
+            ? "font-size:12.5px;line-height:1.45;padding-left:10px;border-left:3px solid var(--color-accent);font-weight:600"
+            : "font-size:12px;line-height:1.45;padding-left:11px;border-left:2px solid var(--color-neutral-300);color:var(--color-neutral-800)"
+        }))
+      };
+    });
+
+    const firstDow = new Date(Date.UTC(2026, 10, 1)).getUTCDay();
+    const cells = [];
+    for (let i = 0; i < firstDow; i++) cells.push(null);
+    for (let d = 1; d <= 30; d++) cells.push(d);
+    while (cells.length % 7 !== 0) cells.push(null);
+    const today = (w.y === 2026 && w.m === 10) ? w.day : null;
+    const calendarCells = cells.map((num) => {
+      const isEvent = num !== null && num >= 24 && num <= 28;
+      const isSel = isEvent && (num - 24) === this.state.activeDay;
+      const isToday = num !== null && num === today;
+      let bg = "transparent", color = "var(--color-text)";
+      if (isEvent) bg = "var(--color-neutral-300)";
+      if (isSel) { bg = "#ec3013"; color = "#ffffff"; }
+      if (isToday && !isSel) { bg = "#f5860b"; color = "#201e1d"; }
+      return {
+        num: num || "",
+        style: "aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:11px;background:" + bg + ";color:" + color + ";font-weight:" + (isEvent || isToday ? "800" : "400")
+      };
+    });
+
+    const teamTabs = TEAMS.map((td, i) => {
+      const on = this.state.teamDay === i;
+      return {
+        label: td.label, pressed: on,
+        style: "padding:8px 12px;min-height:44px;border:2px solid var(--color-text);font-weight:800;font-size:12px;cursor:pointer;" + (on ? "background:var(--color-text);color:var(--color-bg)" : "background:var(--color-bg);color:var(--color-text)"),
+        pick: () => this.setState({ teamDay: i })
+      };
+    });
+    const activeTeams = TEAMS[this.state.teamDay || 0].teams;
+
+    if (!this._mapRef) this._mapRef = (el) => this.setMapEl(el);
+
+    return {
+      mapRef: this._mapRef, dayBannerTitle, dayBannerSub, countdownValue, countdownLabel, monthLabels,
+      tabs, activeSasaran, isu, days, calendarCells, teamTabs, activeTeams,
+      weekdayLabels: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"]
+    };
+  }
+}
+mountDC(Component, document.getElementById("tpl"), document.getElementById("app"));
+</script>
+</body>
+</html>
